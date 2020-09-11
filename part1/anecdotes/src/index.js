@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-const Button = ({ text, handleClick }) => {
-  return <button onClick={handleClick}>{text}</button>;
-};
-
 const anecdotes = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -14,6 +10,18 @@ const anecdotes = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
 ];
 
+const initialVotes = {};
+
+anecdotes.forEach((anecdote, index) => (initialVotes[index] = 0));
+
+const Header = ({ title }) => {
+  return <h1>{title}</h1>;
+};
+
+const Button = ({ text, handleClick }) => {
+  return <button onClick={handleClick}>{text}</button>;
+};
+
 const Anecdote = ({ anecdote, vote }) => {
   return (
     <React.Fragment>
@@ -22,13 +30,11 @@ const Anecdote = ({ anecdote, vote }) => {
     </React.Fragment>
   );
 };
-const initialVotes = {};
-
-anecdotes.forEach((anecdote, index) => (initialVotes[index] = 0));
 
 const App = (props) => {
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(initialVotes);
+  const [mostVotes, setMostVotes] = useState(0);
 
   const chooseAnotherAnecdote = () => {
     let randomNumber = Math.floor(Math.random() * anecdotes.length);
@@ -45,13 +51,20 @@ const App = (props) => {
 
     updatedVotes[selected] += 1;
     setVotes(updatedVotes);
+
+    if (votes[selected] + 1 > votes[mostVotes]) {
+      setMostVotes(selected);
+    }
   };
 
   return (
     <div>
+      <Header title="Anecdote of the day" />
       <Anecdote anecdote={props.anecdotes[selected]} vote={votes[selected]} />
       <Button text="vote" handleClick={voteForAnecdote} />
       <Button text="next anecdote" handleClick={chooseAnotherAnecdote} />
+      <Header title="Anecdote with most votes" />
+      <Anecdote anecdote={props.anecdotes[mostVotes]} vote={votes[mostVotes]} />
     </div>
   );
 };

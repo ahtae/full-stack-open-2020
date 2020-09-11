@@ -15,6 +15,10 @@ const Statistics = ({ good, neutral, bad }) => {
   const average = all ? (good - bad) / all : 0;
   const percentageOfPositive = positive * 100;
 
+  if (!all) {
+    return <p>No feedback given</p>;
+  }
+
   return (
     <React.Fragment>
       <p>good {good}</p>

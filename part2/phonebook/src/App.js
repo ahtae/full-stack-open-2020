@@ -2,13 +2,18 @@ import React, { useState } from 'react';
 import Header from './components/Header';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Search from './components/Search';
 
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' },
   ]);
   const [newName, setNewName] = useState('');
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
+  const [search, setSearch] = useState('');
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -38,9 +43,14 @@ const App = () => {
     setNewPhoneNumber(event.target.value);
   };
 
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+  };
+
   return (
     <div>
       <Header title="Phonebook" />
+      <Search search={search} handleSearchChange={handleSearchChange} />
       <PersonForm
         value={newName}
         addPerson={addPerson}
@@ -50,7 +60,7 @@ const App = () => {
         handleNewPhoneNumberChange={handleNewPhoneNumberChange}
       />
       <Header title="Numbers" />
-      <Persons persons={persons} />
+      <Persons persons={persons} search={search} />
     </div>
   );
 };

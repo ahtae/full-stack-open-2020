@@ -22,7 +22,7 @@ const Statistics = ({ good, neutral, bad }) => {
   return (
     <table>
       <tbody>
-        <Stsatistic text="good" value={good} />
+        <Statistic text="good" value={good} />
         <Statistic text="neutral" value={neutral} />
         <Statistic text="bad" value={bad} />
         <Statistic text="all" value={all} />

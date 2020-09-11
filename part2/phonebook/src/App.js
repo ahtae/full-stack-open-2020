@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Header from './components/Header';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-import Search from './components/Search';
+import Filter from './components/Filter';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -50,7 +50,7 @@ const App = () => {
   return (
     <div>
       <Header title="Phonebook" />
-      <Search search={search} handleSearchChange={handleSearchChange} />
+      <Filter search={search} handleSearchChange={handleSearchChange} />
       <PersonForm
         value={newName}
         addPerson={addPerson}

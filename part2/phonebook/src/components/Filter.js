@@ -1,7 +1,7 @@
 import React from 'react';
 
-const Search = ({ search, handleSearchChange }) => {
+const Filter = ({ search, handleSearchChange }) => {
   return <input value={search} onChange={handleSearchChange} />
 };
 
-export default Search;
+export default Filter;

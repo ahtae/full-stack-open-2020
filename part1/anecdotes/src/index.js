@@ -5,22 +5,6 @@ const Button = ({ text, handleClick }) => {
   return <button onClick={handleClick}>{text}</button>;
 };
 
-const App = (props) => {
-  const [selected, setSelected] = useState(0);
-  const chooseAnotherAnecdote = () => {
-    const randomNumber = Math.floor(Math.random() * anecdotes.length);
-
-    setSelected(randomNumber);
-  };
-
-  return (
-    <div>
-      <p>{props.anecdotes[selected]}</p>
-      <Button text="next anecdote" handleClick={chooseAnotherAnecdote} />
-    </div>
-  );
-};
-
 const anecdotes = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -29,5 +13,47 @@ const anecdotes = [
   'Premature optimization is the root of all evil.',
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
 ];
+
+const Anecdote = ({ anecdote, vote }) => {
+  return (
+    <React.Fragment>
+      <div>{anecdote}</div>
+      <div>has {vote}</div>
+    </React.Fragment>
+  );
+};
+const initialVotes = {};
+
+anecdotes.forEach((anecdote, index) => (initialVotes[index] = 0));
+
+const App = (props) => {
+  const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(initialVotes);
+
+  const chooseAnotherAnecdote = () => {
+    let randomNumber = Math.floor(Math.random() * anecdotes.length);
+
+    while (randomNumber === selected) {
+      randomNumber = Math.floor(Math.random() * anecdotes.length);
+    }
+
+    setSelected(randomNumber);
+  };
+
+  const voteForAnecdote = () => {
+    const updatedVotes = { ...votes };
+
+    updatedVotes[selected] += 1;
+    setVotes(updatedVotes);
+  };
+
+  return (
+    <div>
+      <Anecdote anecdote={props.anecdotes[selected]} vote={votes[selected]} />
+      <Button text="vote" handleClick={voteForAnecdote} />
+      <Button text="next anecdote" handleClick={chooseAnotherAnecdote} />
+    </div>
+  );
+};
 
 ReactDOM.render(<App anecdotes={anecdotes} />, document.getElementById('root'));

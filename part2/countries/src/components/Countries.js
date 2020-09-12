@@ -1,22 +1,15 @@
 import React from 'react';
+import SingleCountry from './SingleCountry';
 import Country from './Country';
 
 const Countries = ({ countries, search }) => {
-  const filteredCountries = search
-    ? countries.filter((country) =>
-        country.name.toLowerCase().includes(search.toLowerCase())
-      )
-    : countries;
-
-  if (filteredCountries.length > 10) {
+  if (countries.length > 10) {
     return <p>Too many matches, specify another filter</p>;
+  } else if (countries.length === 1) {
+    return <Country country={countries[0]} />;
   } else {
-    return filteredCountries.map((country) => (
-      <Country
-        key={country.name}
-        country={country}
-        displayInformation={filteredCountries.length === 1}
-      />
+    return countries.map((country) => (
+      <SingleCountry key={country.name} country={country} />
     ));
   }
 };

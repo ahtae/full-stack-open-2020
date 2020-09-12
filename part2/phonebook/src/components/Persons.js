@@ -1,7 +1,7 @@
 import React from 'react';
 import Person from './Person';
 
-const Persons = ({ persons, search }) => {
+const Persons = ({ persons, search, removePerson }) => {
   const filteredPersons = search
     ? persons.filter((person) =>
         person.name.toLowerCase().includes(search.toLowerCase())
@@ -9,7 +9,12 @@ const Persons = ({ persons, search }) => {
     : persons;
 
   return filteredPersons.map((person) => (
-    <Person key={person.name} name={person.name} number={person.number} />
+    <Person
+      key={person.name}
+      name={person.name}
+      number={person.number}
+      removePerson={() => removePerson(person.id)}
+    />
   ));
 };
 

@@ -1,4 +1,6 @@
 const express = require('express');
+const morgan = require('morgan');
+
 const app = express();
 const PORT = 3001;
 
@@ -29,7 +31,13 @@ const generateId = () => {
   return Math.floor(Math.random() * 10000000);
 };
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' });
+};
+
 app.use(express.json());
+
+app.use(morgan('tiny'));
 
 app.get('/info', (req, res) => {
   res.write(`<p>Phonebook has info for ${persons.length} people</p>`);
@@ -78,6 +86,8 @@ app.post('/api/persons', (req, res) => {
 
   res.json(person);
 });
+
+app.use(unknownEndpoint);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

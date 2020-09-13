@@ -4,6 +4,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const Person = require('./models/person');
+const { response } = require('express');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -17,6 +18,10 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' });
+  } else if (error.name === 'ValidationError') {
+    return res.status(400).json({ error: error.message });
+  } else if (error.name === 'MongoError') {
+    return res.status(400).json({ error: 'Name already exists!' });
   }
 
   next(error);
@@ -44,15 +49,17 @@ app.use(
   })
 );
 
-app.get('/info', (req, res) => {
-  Person.find({}).then((persons) => {
-    res.write(`<p>Phonebook has info for ${persons.length} people</p>`);
-    res.write(`${new Date()}`);
-    res.end();
-  });
+app.get('/info', (req, res, next) => {
+  Person.find({})
+    .then((persons) => {
+      res.write(`<p>Phonebook has info for ${persons.length} people</p>`);
+      res.write(`${new Date()}`);
+      res.end();
+    })
+    .catch((error) => next(error));
 });
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res, next) => {
   Person.find({})
     .then((persons) => res.json(persons))
     .catch((error) => next(error));
@@ -82,14 +89,8 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch((error) => next(error));
 });
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const { body } = req;
-
-  if (!body.name) {
-    res.status(400).json({ error: 'name missing' });
-  } else if (!body.number) {
-    res.status(400).json({ error: 'number missing' });
-  }
 
   const person = new Person({
     name: body.name,
@@ -99,7 +100,7 @@ app.post('/api/persons', (req, res) => {
   person
     .save()
     .then((savedPerson) => {
-      res.json(savedPerson);
+      res.json(savedPerson.toJSON());
     })
     .catch((error) => next(error));
 });

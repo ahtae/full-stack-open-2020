@@ -13,22 +13,40 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault();
+
     const doesNameAlreadyExist = persons.some(
       (person) => person.name === newName
     );
 
-    if (doesNameAlreadyExist) {
-      alert(`${newName} has already been added to phonebook!`);
-    } else {
-      const personObject = { name: newName, number: newPhoneNumber };
+    const personObject = { name: newName, number: newPhoneNumber };
 
+    if (doesNameAlreadyExist) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const personToUpdate = persons.filter(
+          (person) => person.name === newName
+        )[0];
+        const { id } = personToUpdate;
+
+        personService.update(id, personObject).then((updatedPerson) => {
+          const updatedPersons = persons.map((person) =>
+            person.name === newName ? updatedPerson : person
+          );
+
+          setPersons(updatedPersons);
+        });
+      }
+    } else {
       personService
         .create(personObject)
         .then((returnedPerson) => setPersons(persons.concat(returnedPerson)));
-
-      setNewName('');
-      setNewPhoneNumber('');
     }
+
+    setNewName('');
+    setNewPhoneNumber('');
   };
 
   const removePerson = (id) => {

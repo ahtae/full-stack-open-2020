@@ -34,9 +34,11 @@ app.use(
 );
 
 app.get('/info', (req, res) => {
-  res.write(`<p>Phonebook has info for ${persons.length} people</p>`);
-  res.write(`${new Date()}`);
-  res.end();
+  Person.find({}).then((persons) => {
+    res.write(`<p>Phonebook has info for ${persons.length} people</p>`);
+    res.write(`${new Date()}`);
+    res.end();
+  });
 });
 
 app.get('/api/persons', (req, res) => {
@@ -70,15 +72,14 @@ app.post('/api/persons', (req, res) => {
     res.status(400).json({ error: 'number missing' });
   }
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
-  };
+  });
 
-  persons = persons.concat(person);
-
-  res.json(person);
+  person.save().then((savedPerson) => {
+    res.json(savedPerson);
+  });
 });
 
 app.use(unknownEndpoint);

@@ -8,10 +8,21 @@ const Person = require('./models/person');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' });
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' });
 };
 
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message);
+
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 app.use(express.static('build'));
 
 app.use(cors());
@@ -45,22 +56,28 @@ app.get('/api/persons', (req, res) => {
   Person.find({}).then((persons) => res.json(persons));
 });
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find((person) => person.id === id);
+app.get('/api/persons/:id', (req, res, next) => {
+  const { id } = req.params;
 
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
+  Person.findById(id)
+    .then((person) => {
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter((person) => person.id !== id);
+app.delete('/api/persons/:id', (req, res, next) => {
+  const { id } = req.params;
 
-  res.status(204).end();
+  Person.findByIdAndRemove(id)
+    .then((result) => {
+      res.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
 app.post('/api/persons', (req, res) => {
@@ -83,6 +100,8 @@ app.post('/api/persons', (req, res) => {
 });
 
 app.use(unknownEndpoint);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

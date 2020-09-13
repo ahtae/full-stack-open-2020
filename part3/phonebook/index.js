@@ -47,7 +47,7 @@ app.use(
       '-',
       tokens['response-time'](req, res),
       'ms',
-      JSON.stringify(req.body),
+      tokens.method(req, res) === 'POST' ? JSON.stringify(req.body) : null,
     ].join(' ');
   })
 );

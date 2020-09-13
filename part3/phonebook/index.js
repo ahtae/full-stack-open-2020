@@ -53,7 +53,9 @@ app.get('/info', (req, res) => {
 });
 
 app.get('/api/persons', (req, res) => {
-  Person.find({}).then((persons) => res.json(persons));
+  Person.find({})
+    .then((persons) => res.json(persons))
+    .catch((error) => next(error));
 });
 
 app.get('/api/persons/:id', (req, res, next) => {
@@ -94,9 +96,27 @@ app.post('/api/persons', (req, res) => {
     number: body.number,
   });
 
-  person.save().then((savedPerson) => {
-    res.json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      res.json(savedPerson);
+    })
+    .catch((error) => next(error));
+});
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const { id } = req.params;
+  const { body } = req;
+
+  const informationToUpdate = {
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(id, informationToUpdate)
+    .then((updatedPerson) => {
+      res.json(updatedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 app.use(unknownEndpoint);

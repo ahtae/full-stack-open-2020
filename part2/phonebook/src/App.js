@@ -51,7 +51,7 @@ const App = () => {
             }, 5000);
           })
           .catch((error) => {
-            setMessage(`Person '${newName}' has already removed from server`);
+            setMessage(error.response.data.error);
             setMessageType('error');
 
             setTimeout(() => {
@@ -74,7 +74,7 @@ const App = () => {
           }, 5000);
         })
         .catch((error) => {
-          setMessage(`Person '${newName}' cannot be added to the server`);
+          setMessage(error.response.data.error);
           setMessageType('error');
 
           setTimeout(() => {
@@ -106,9 +106,7 @@ const App = () => {
           }, 5000);
         })
         .catch((error) => {
-          setMessage(
-            `Information of ${person.name} has already been removed from the server`
-          );
+          setMessage(error.response.data.error);
           setMessageType('error');
 
           setTimeout(() => {
@@ -136,7 +134,7 @@ const App = () => {
       .getAll()
       .then((initialPersons) => setPersons(initialPersons))
       .catch((error) => {
-        setMessage('Cannot retrieve all the persons in the phonebook');
+        setMessage(error.response.data.error);
         setMessageType('error');
 
         setTimeout(() => {

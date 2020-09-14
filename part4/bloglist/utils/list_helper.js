@@ -17,7 +17,7 @@ const favoriteBlog = (blogs) => {
 
 const mostBlogs = (blogs) => {
   const map = {};
-  let authorWithMostVotes = null;
+  let authorWithMostBlogs = null;
 
   blogs.forEach((blog) => {
     map[blog.author]
@@ -25,14 +25,14 @@ const mostBlogs = (blogs) => {
       : (map[blog.author] = { author: blog.author, blogs: 1 });
 
     if (
-      !authorWithMostVotes ||
-      map[blog.author].blogs > map[authorWithMostVotes].blogs
+      !authorWithMostBlogs ||
+      map[blog.author].blogs > map[authorWithMostBlogs].blogs
     ) {
-      authorWithMostVotes = blog.author;
+      authorWithMostBlogs = blog.author;
     }
   });
 
-  return map[authorWithMostVotes] || authorWithMostVotes;
+  return map[authorWithMostBlogs] || authorWithMostBlogs;
 };
 
 module.exports = {

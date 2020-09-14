@@ -4,7 +4,6 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const Person = require('./models/person');
-const { response } = require('express');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -14,20 +13,17 @@ const unknownEndpoint = (req, res) => {
 };
 
 const errorHandler = (error, req, res, next) => {
-  console.error(error.message);
-
   if (error.name === 'CastError') {
-    return res.status(400).send({ error: 'malformatted id' });
+    res.status(400).send({ error: 'malformatted id' });
   } else if (error.name === 'ValidationError') {
-    return res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   } else if (error.name === 'MongoError') {
-    return res.status(400).json({ error: 'Name already exists!' });
+    res.status(400).json({ error: 'Name already exists!' });
   }
 
   next(error);
 };
 
-app.use(errorHandler);
 app.use(express.static('build'));
 
 app.use(cors());
@@ -99,9 +95,8 @@ app.post('/api/persons', (req, res, next) => {
 
   person
     .save()
-    .then((savedPerson) => {
-      res.json(savedPerson.toJSON());
-    })
+    .then((savedPerson) => savedPerson.toJSON())
+    .then((savedAndFormattedPerson) => res.json(savedAndFormattedPerson))
     .catch((error) => next(error));
 });
 

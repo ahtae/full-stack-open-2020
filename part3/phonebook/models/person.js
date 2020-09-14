@@ -17,8 +17,8 @@ mongoose
   });
 
 const personSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-  number: { type: String, required: true },
+  name: { type: String, required: true, unique: true, minlength: 3 },
+  number: { type: String, required: true, minlength: 8 },
 });
 
 personSchema.set('toJSON', {
@@ -28,5 +28,16 @@ personSchema.set('toJSON', {
     delete returnedObject.__v;
   },
 });
+
+mongoose.plugin((schema) => {
+  schema.pre('findOneAndUpdate', setRunValidators);
+  schema.pre('updateMany', setRunValidators);
+  schema.pre('updateOne', setRunValidators);
+  schema.pre('update', setRunValidators);
+});
+
+function setRunValidators() {
+  this.setOptions({ runValidators: true });
+}
 
 module.exports = mongoose.model('Person', personSchema);

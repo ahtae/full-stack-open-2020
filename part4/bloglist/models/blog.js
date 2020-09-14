@@ -22,6 +22,8 @@ const blogSchema = new mongoose.Schema({
   },
 });
 
+mongoose.set('useFindAndModify', false);
+
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();

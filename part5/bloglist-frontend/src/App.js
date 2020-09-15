@@ -4,12 +4,14 @@ import Blogs from './components/Blogs';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import BlogForm from './components/BlogForm';
+import Notification from './components/Notification';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [user, setUser] = useState(null);
   const [newTitle, setNewTitle] = useState('');
   const [newAuthor, setNewAuthor] = useState('');
@@ -49,9 +51,11 @@ const App = () => {
       blogService.setToken(user.token);
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
     } catch (exception) {
-      setErrorMessage('wrong username or password');
+      setMessage('wrong username or password');
+      setMessageType('error');
       setTimeout(() => {
-        setErrorMessage(null);
+        setMessage(null);
+        setMessageType(null);
       }, 5000);
     }
   };
@@ -73,14 +77,24 @@ const App = () => {
 
       const returnedBlog = await blogService.create(blogObject);
 
+      setMessage(
+        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      );
+      setMessageType('success');
+      setTimeout(() => {
+        setMessage(null);
+        setMessageType(null);
+      }, 5000);
       setBlogs(blogs.concat(returnedBlog));
       setNewTitle('');
       setNewAuthor('');
       setNewUrl('');
     } catch (exception) {
-      setErrorMessage(exception.error);
+      setMessage(exception.response.data.error);
+      setMessageType('error');
       setTimeout(() => {
-        setErrorMessage(null);
+        setMessage(null);
+        setMessageType(null);
       }, 5000);
     }
   };
@@ -110,7 +124,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
-        {errorMessage ? <div className="error">{errorMessage}</div> : null}
+        <Notification message={message} type={messageType} />
         <LoginForm
           username={username}
           handleLogin={handleLogin}
@@ -125,7 +139,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      {errorMessage ? <div className="error">{errorMessage}</div> : null}
+      <Notification message={message} type={messageType} />
       <div>
         {user.name} logged in <button onClick={handleLogOut}>log out</button>
       </div>

@@ -27,12 +27,15 @@ blogsRouter.put('/:id', async (request, response) => {
   const { id } = request.params;
 
   const blog = {
+    title: body.title,
+    author: body.author,
+    url: body.url,
     likes: body.likes,
   };
 
   const updatedBlog = await Blog.findByIdAndUpdate(id, blog, { new: true });
 
-  response.json(updatedBlog.toJSON());
+  response.json(updatedBlog);
 });
 
 module.exports = blogsRouter;

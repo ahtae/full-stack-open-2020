@@ -92,10 +92,7 @@ describe('addition of a new blog', () => {
       url: 'no title',
     };
 
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(400);
+    await api.post('/api/blogs').send(newBlog).expect(400);
 
     const blogsAtEnd = await helper.blogsInDb();
 
@@ -143,6 +140,25 @@ describe('deletion of a blog', () => {
     const titles = blogsAtEnd.map((r) => r.title);
 
     expect(titles).not.toContain(blogToDelete.title);
+  });
+});
+
+describe('update a blog', () => {
+  test('updating the likes of an individual blog post', async () => {
+    let blogsAtStart = await helper.blogsInDb();
+    const blogToUpdate = blogsAtStart[0];
+    const informationToUpdate = {
+      ...blogToUpdate,
+      likes: 100,
+    };
+
+    const response = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(informationToUpdate)
+      .expect(200);
+    const updatedBlog = response.body;
+
+    expect(updatedBlog.likes).toEqual(100);
   });
 });
 

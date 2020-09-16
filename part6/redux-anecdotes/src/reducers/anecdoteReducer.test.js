@@ -1,8 +1,9 @@
 import anecdoteReducer from './anecdoteReducer';
 import deepFreeze from 'deep-freeze';
+import { upvote, createAnecdote } from './anecdoteReducer';
 
 describe('anecdoteReducer', () => {
-  test('returns new state with action', () => {
+  test('returns new state with action UPVOTE', () => {
     const anecdotesAtStart = [
       'If it hurts, do it more often',
       'Adding manpower to a late software project makes it later!',
@@ -23,10 +24,7 @@ describe('anecdoteReducer', () => {
     };
 
     const state = anecdotesAtStart.map(asObject);
-    const action = {
-      type: 'UPVOTE',
-      id: state[0].id,
-    };
+    const action = upvote(state[0].id);
 
     deepFreeze(state);
     const newState = anecdoteReducer(state, action);
@@ -40,5 +38,23 @@ describe('anecdoteReducer', () => {
         !index ? { ...anecdoteObj, votes: anecdoteObj.votes + 1 } : anecdoteObj
       )
     );
+  });
+
+  test('returns new state with action NEW_ANECDOTE', () => {
+    const state = [];
+    const action = {
+      type: 'NEW_ANECDOTE',
+      data: {
+        content: 'this is a new anecdote',
+        votes: 0,
+        id: 1,
+      },
+    };
+
+    deepFreeze(state);
+    const newState = anecdoteReducer(state, action);
+
+    expect(newState.length).toBe(1);
+    expect(newState).toContainEqual(action.data);
   });
 });

@@ -1,5 +1,5 @@
 import deepFreeze from 'deep-freeze';
-import { SET_NOTIFICATION } from './notificationReducer';
+import { SET_NOTIFICATION, REMOVE_NOTIFICATION } from './notificationReducer';
 import notificationReducer from './notificationReducer';
 
 describe('notificationReducer', () => {
@@ -13,5 +13,16 @@ describe('notificationReducer', () => {
     deepFreeze(state);
     const newState = notificationReducer(state, action);
     expect(newState).toBe('I HAVE A NOTIFICATION :)');
+  });
+
+  test('returns new state with action REMOVE_NOTIFICATION', () => {
+    const state = 'I HAVE A NOTIFICATION :)';
+    const action = {
+      type: REMOVE_NOTIFICATION,
+    };
+
+    deepFreeze(state);
+    const newState = notificationReducer(state, action);
+    expect(newState).toBe('');
   });
 });

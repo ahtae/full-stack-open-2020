@@ -47,7 +47,7 @@ const reducer = (state = [], action) => {
           anecdoteObj.id !== action.data.id ? anecdoteObj : action.data
         // : { ...anecdoteObj, votes: anecdoteObj.votes + 1 }
       );
-      console.log(updatedAnecdotes)
+      console.log(updatedAnecdotes);
       return updatedAnecdotes;
     case NEW_ANECDOTE:
       return [...state, action.data];

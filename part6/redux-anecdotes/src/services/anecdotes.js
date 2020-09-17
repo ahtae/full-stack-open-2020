@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Anecdote from '../components/Anecdote';
 
 const baseUrl = 'http://localhost:3001/anecdotes';
 
@@ -25,4 +26,10 @@ const createNew = async (anecdote) => {
   return response.data;
 };
 
-export default { getAll, createNew };
+const update = async (anecdoteObj) => {
+  const response = await axios.put(`${baseUrl}/${anecdoteObj.id}`, anecdoteObj);
+
+  return response.data;
+};
+
+export default { getAll, createNew, update };

@@ -42,12 +42,9 @@ export const initializeAnecdotes = () => {
 const reducer = (state = [], action) => {
   switch (action.type) {
     case UPVOTE:
-      const updatedAnecdotes = state.map(
-        (anecdoteObj) =>
-          anecdoteObj.id !== action.data.id ? anecdoteObj : action.data
-        // : { ...anecdoteObj, votes: anecdoteObj.votes + 1 }
+      const updatedAnecdotes = state.map((anecdoteObj) =>
+        anecdoteObj.id !== action.data.id ? anecdoteObj : action.data
       );
-      console.log(updatedAnecdotes);
       return updatedAnecdotes;
     case NEW_ANECDOTE:
       return [...state, action.data];

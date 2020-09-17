@@ -10,9 +10,15 @@ import {
 const AnecdoteList = () => {
   const dispatch = useDispatch();
 
-  const anecdotes = useSelector((state) =>
-    state.anecdotes.sort((a, b) => b.votes - a.votes)
-  );
+  const anecdotes = useSelector((state) => {
+    const filteredAnecdotes = state.filter
+      ? state.anecdotes.filter((anecdote) =>
+          anecdote.content.toLowerCase().includes(state.filter.toLowerCase())
+        )
+      : state.anecdotes;
+
+    return filteredAnecdotes.sort((a, b) => b.votes - a.votes);
+  });
 
   const vote = (id) => {
     const anecdoteVotedFor = anecdotes.find((anecdote) => anecdote.id === id);

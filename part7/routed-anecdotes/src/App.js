@@ -94,30 +94,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input
-            type={content.type}
-            name="content"
-            value={content.value}
-            onChange={content.onChange}
-          />
+          <input name="content" {...content} />
         </div>
         <div>
           author
-          <input
-            type={author.type}
-            name="author"
-            value={author.value}
-            onChange={author.onChange}
-          />
+          <input name="author" {...author} />
         </div>
         <div>
           url for more info
-          <input
-            type={info.type}
-            name="info"
-            value={info.value}
-            onChange={info.onChange}
-          />
+          <input name="info" {...info} />
         </div>
         <button>create</button>
         <button type="button" onClick={handleReset}>

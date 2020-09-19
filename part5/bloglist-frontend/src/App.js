@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LoginForm from './components/LoginForm';
 import Blogs from './components/Blogs';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -16,6 +17,7 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('');
   const [newAuthor, setNewAuthor] = useState('');
   const [newUrl, setNewUrl] = useState('');
+  const blogFormRef = useRef();
 
   const handleTitleChange = ({ target }) => {
     setNewTitle(target.value);
@@ -89,6 +91,8 @@ const App = () => {
       setNewTitle('');
       setNewAuthor('');
       setNewUrl('');
+      console.log(blogFormRef.current);
+      blogFormRef.current.toggleVisibility();
     } catch (exception) {
       setMessage(exception.response.data.error);
       setMessageType('error');
@@ -144,15 +148,17 @@ const App = () => {
         {user.name} logged in <button onClick={handleLogOut}>log out</button>
       </div>
       <h2>create new</h2>
-      <BlogForm
-        addBlog={addBlog}
-        newTitle={newTitle}
-        handleTitleChange={handleTitleChange}
-        handleAuthorChange={handleAuthorChange}
-        handleUrlChange={handleUrlChange}
-        newAuthor={newAuthor}
-        newUrl={newUrl}
-      />
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <BlogForm
+          addBlog={addBlog}
+          newTitle={newTitle}
+          handleTitleChange={handleTitleChange}
+          handleAuthorChange={handleAuthorChange}
+          handleUrlChange={handleUrlChange}
+          newAuthor={newAuthor}
+          newUrl={newUrl}
+        />
+      </Togglable>
       <Blogs blogs={blogs} />
     </div>
   );

@@ -55,7 +55,7 @@ const App = () => {
       const updatedBlogs = [...blogs];
       updatedBlogs[indexOfUpdatedBlog] = updatedBlog;
 
-      setBlogs(updatedBlogs);
+      setBlogs(updatedBlogs.sort((a, b) => b.likes - a.likes));
       setMessage(`you liked ${updatedBlog.title} by ${updatedBlog.author}`);
       setMessageType('success');
       setTimeout(() => {
@@ -89,7 +89,7 @@ const App = () => {
         setMessage(null);
         setMessageType(null);
       }, 5000);
-      setBlogs(blogs.concat(returnedBlog));
+      setBlogs(blogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes));
       blogFormRef.current.toggleVisibility();
     } catch (exception) {
       setMessage(exception.response.data.error);
@@ -103,7 +103,9 @@ const App = () => {
 
   useEffect(() => {
     async function fetchBlogs() {
-      const blogs = await blogService.getAll();
+      const blogs = await blogService
+        .getAll()
+        .sort((a, b) => b.likes - a.likes);
 
       setBlogs(blogs);
     }

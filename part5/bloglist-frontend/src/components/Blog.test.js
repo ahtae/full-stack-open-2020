@@ -22,20 +22,47 @@ test('renders content', () => {
   expect(component.container).not.toHaveTextContent('www.nourl.com');
 });
 
-// test('clicking the button calls event handler once', async () => {
-//   const note = {
-//     content: 'Component testing is done with react-testing-library',
-//     important: true,
-//   };
+test('button can be used to view and hide blog', () => {
+  const blog = {
+    title: 'this is a rendered blog',
+    author: 'me',
+    likes: 100,
+    url: 'www.nourl.com',
+    user: {
+      name: 'bob',
+    },
+  };
 
-//   const mockHandler = jest.fn();
+  window.localStorage.setItem(
+    'loggedBlogappUser',
+    JSON.stringify({
+      user: {
+        name: 'bob',
+      },
+    })
+  );
 
-//   const { getByText } = render(
-//     <Note note={note} toggleImportance={mockHandler} />
-//   );
+  const component = render(<Blog blog={blog} />);
 
-//   const button = getByText('make not important');
-//   fireEvent.click(button);
+  const button = component.getByText('view');
+  fireEvent.click(button);
 
-//   expect(mockHandler.mock.calls.length).toBe(1);
-// });
+  expect(component.container).toHaveTextContent('this is a rendered blog');
+
+  expect(component.container).toHaveTextContent('me');
+
+  expect(component.container).toHaveTextContent(100);
+
+  expect(component.container).toHaveTextContent('www.nourl.com');
+
+  const closeButton = component.getByText('hide');
+  fireEvent.click(closeButton);
+
+  expect(component.container).toHaveTextContent('this is a rendered blog');
+
+  expect(component.container).toHaveTextContent('me');
+
+  expect(component.container).not.toHaveTextContent(100);
+
+  expect(component.container).not.toHaveTextContent('www.nourl.com');
+});

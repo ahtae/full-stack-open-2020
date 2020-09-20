@@ -16,12 +16,12 @@ const Blog = ({ blog }) => {
       {showDetails ? (
         <>
           <div>
-            {blog.title}{' '}
+            {blog.title} {blog.author}
             <button onClick={() => setShowDetails(!showDetails)}>hide</button>
           </div>
           <div>{blog.url}</div>
           <div>likes {blog.likes}</div>
-          <div>{blog.author}</div>
+          <div>{blog.user.name}</div>
         </>
       ) : (
         <>

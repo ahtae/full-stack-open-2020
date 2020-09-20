@@ -101,6 +101,38 @@ const App = () => {
     }
   };
 
+  const removeBlog = async (id) => {
+    try {
+      const indexOfBlogToRemove = blogs.findIndex((blog) => blog.id === id);
+      const { name, author } = blogs[indexOfBlogToRemove];
+
+      if (window.confirm(`Remove blog ${name} by ${author}`)) {
+        const removedBlog = await blogService.remove(id);
+
+        setMessage(
+          `${removedBlog.title} by ${removedBlog.author} has been removed`
+        );
+        setMessageType('success');
+        setTimeout(() => {
+          setMessage(null);
+          setMessageType(null);
+        }, 5000);
+        setBlogs(
+          blogs
+            .slice(0, indexOfBlogToRemove)
+            .concat(blogs.slice(indexOfBlogToRemove + 1))
+        );
+      }
+    } catch (exception) {
+      setMessage(exception.response.data.error);
+      setMessageType('error');
+      setTimeout(() => {
+        setMessage(null);
+        setMessageType(null);
+      }, 5000);
+    }
+  };
+
   useEffect(() => {
     async function fetchBlogs() {
       const blogs = await blogService.getAll();
@@ -149,7 +181,7 @@ const App = () => {
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
-      <Blogs blogs={blogs} upvoteBlog={upvoteBlog} />
+      <Blogs blogs={blogs} upvoteBlog={upvoteBlog} removeBlog={removeBlog} />
     </div>
   );
 };

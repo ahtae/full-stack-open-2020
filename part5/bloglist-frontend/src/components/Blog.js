@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Blog = ({ blog, upvoteBlog }) => {
+const Blog = ({ blog, upvoteBlog, removeBlog }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const blogStyle = {
@@ -21,6 +21,11 @@ const Blog = ({ blog, upvoteBlog }) => {
     });
   };
 
+  const handleRemoveBlog = () => {
+    removeBlog(blog.id);
+  };
+
+  console.log(blog, window.localStorage.getItem('loggedBlogappUser'))
   return (
     <div style={blogStyle}>
       {showDetails ? (
@@ -34,6 +39,7 @@ const Blog = ({ blog, upvoteBlog }) => {
             likes {blog.likes} <button onClick={handleUpvoteBlog}>like</button>
           </div>
           <div>{blog.user.name}</div>
+          {JSON.parse(window.localStorage.getItem('loggedBlogappUser')).username === blog.user.username ? <button onClick={handleRemoveBlog}>remove</button> : null}
         </>
       ) : (
         <>

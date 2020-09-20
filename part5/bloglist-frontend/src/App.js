@@ -103,11 +103,9 @@ const App = () => {
 
   useEffect(() => {
     async function fetchBlogs() {
-      const blogs = await blogService
-        .getAll()
-        .sort((a, b) => b.likes - a.likes);
+      const blogs = await blogService.getAll();
 
-      setBlogs(blogs);
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes));
     }
 
     fetchBlogs();

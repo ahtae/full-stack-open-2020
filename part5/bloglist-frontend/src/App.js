@@ -48,6 +48,30 @@ const App = () => {
     }
   };
 
+  const upvoteBlog = async (id, blogObject) => {
+    try {
+      const updatedBlog = await blogService.update(id, blogObject);
+      const indexOfUpdatedBlog = blogs.findIndex((blog) => blog.id === id);
+      const updatedBlogs = [...blogs];
+      updatedBlogs[indexOfUpdatedBlog] = updatedBlog;
+
+      setBlogs(updatedBlogs);
+      setMessage(`you liked ${updatedBlog.title} by ${updatedBlog.author}`);
+      setMessageType('success');
+      setTimeout(() => {
+        setMessage(null);
+        setMessageType(null);
+      }, 5000);
+    } catch (exception) {
+      setMessage(exception.response.data.error);
+      setMessageType('error');
+      setTimeout(() => {
+        setMessage(null);
+        setMessageType(null);
+      }, 5000);
+    }
+  };
+
   const handleLogOut = () => {
     window.localStorage.removeItem('loggedBlogappUser');
     setUser(null);
@@ -125,7 +149,7 @@ const App = () => {
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
-      <Blogs blogs={blogs} />
+      <Blogs blogs={blogs} upvoteBlog={upvoteBlog} />
     </div>
   );
 };

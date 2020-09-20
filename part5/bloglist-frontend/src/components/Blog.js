@@ -41,8 +41,8 @@ const Blog = ({ blog, upvoteBlog, removeBlog }) => {
           <div>{blog.user.name}</div>
           {JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
             .username === blog.user.username ? (
-            <button onClick={handleRemoveBlog}>remove</button>
-          ) : null}
+              <button onClick={handleRemoveBlog}>remove</button>
+            ) : null}
         </>
       ) : (
         <>

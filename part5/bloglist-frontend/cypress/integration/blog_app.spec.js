@@ -100,5 +100,39 @@ describe('Blog app', function () {
         cy.get('html').should('not.contain', 'remove')
       })
     })
+
+    describe('The blogs', function() {
+      it('are ordered by the likes in descending order', function() {
+        cy.createBlog({
+          title: 'blog3',
+          author: 'blog3 author',
+          url: 'www.blog3.com',
+          likes: 1
+        })
+
+        cy.createBlog({
+          title: 'blog2',
+          author: 'blog2 author',
+          url: 'www.blog2.com',
+          likes: 10
+        })
+
+        cy.createBlog({
+          title: 'blog1',
+          author: 'blog1 author',
+          url: 'www.blog1.com',
+          likes: 100
+        })
+
+        cy.contains('view').click()
+        cy.contains('view').click()
+        cy.contains('view').click()
+        cy.get('.likes').then((blogs) => {
+          const likes = [Number(blogs[0].outerText.split(' ')[1]), Number(blogs[1].outerText.split(' ')[1]), Number(blogs[2].outerText.split(' ')[1])]
+
+          expect(likes).to.equal(likes.sort((a, b) => b - a));
+        })
+      })
+    })
   })
 });

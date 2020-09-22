@@ -26,7 +26,7 @@ const Blog = ({ blog, upvoteBlog, removeBlog }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       {showDetails ? (
         <>
           <div>
@@ -34,7 +34,7 @@ const Blog = ({ blog, upvoteBlog, removeBlog }) => {
             <button onClick={() => setShowDetails(!showDetails)}>hide</button>
           </div>
           <div>{blog.url}</div>
-          <div>
+          <div className="likes">
             likes {blog.likes} <button onClick={handleUpvoteBlog}>like</button>
           </div>
           <div>{blog.user.name}</div>

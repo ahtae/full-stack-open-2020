@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const Blogs = ({ blogs, upvoteBlog, removeBlog }) => {
   return (
-    <div>
+    <div id="blogs">
       {blogs.map((blog) => (
         <Blog
           key={blog.id}

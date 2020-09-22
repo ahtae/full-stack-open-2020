@@ -1,13 +1,20 @@
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3001/api/testing/reset');
-    const user = {
+    const user1 = {
       name: 'eric andre',
       username: 'eric',
       password: 'eric',
     };
 
-    cy.request('POST', 'http://localhost:3001/api/users/', user);
+    const user2 = {
+      name: 'philip j. fry',
+      username: 'fry',
+      password: 'fry',
+    };
+
+    cy.request('POST', 'http://localhost:3001/api/users/', user1);
+    cy.request('POST', 'http://localhost:3001/api/users/', user2);
     cy.visit('http://localhost:3000');
   });
 
@@ -62,7 +69,6 @@ describe('Blog app', function () {
       cy.get('.success').should('contain', 'a blog created by cypress').and('have.css', 'color', 'rgb(0, 128, 0)').and('have.css', 'border-style', 'solid')
     })
 
-
     describe('and a blog exists', function () {
       beforeEach(function () {
         cy.createBlog({
@@ -78,6 +84,20 @@ describe('Blog app', function () {
         cy.contains(100)
         cy.contains('like').click()
         cy.contains(101)
+      })
+
+      it('it can be deleted', function () {
+        cy.contains('view').click()
+        cy.contains('remove').click()
+        cy.get('html').should('not.contain', 'a blog created by cypress')
+      })
+
+      it('it can only be deleted by the creator of the blog', function () {
+        cy.contains('log out').click()
+        cy.login({ username: 'fry', password: 'fry' })
+
+        cy.contains('view').click()
+        cy.get('html').should('not.contain', 'remove')
       })
     })
   })

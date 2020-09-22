@@ -19,3 +19,15 @@ Cypress.Commands.add('createBlog', ({ title, author, url, likes=10 }) => {
 
   cy.visit('http://localhost:3000')
 })
+
+// Cypress.Commands.remove('removeBlog', (id) => {
+//   cy.request({
+//     url: `http://localhost:3001/api/blogs/${id}`,
+//     method: 'DELETE',
+//     headers: {
+//       'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedBlogappUser')).token}`
+//     }
+//   })
+
+//   cy.visit('http://localhost:3000')
+// })

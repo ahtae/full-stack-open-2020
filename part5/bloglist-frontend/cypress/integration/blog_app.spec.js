@@ -1,12 +1,12 @@
 describe('Blog app', function () {
   beforeEach(function () {
+    cy.request('POST', 'http://localhost:3001/api/testing/reset');
     const user = {
       name: 'eric andre',
       username: 'eric',
       password: 'eric',
     };
 
-    cy.request('POST', 'http://localhost:3001/api/testing/reset');
     cy.request('POST', 'http://localhost:3001/api/users/', user);
     cy.visit('http://localhost:3000');
   });
@@ -39,11 +39,12 @@ describe('Blog app', function () {
     });
   });
 
-  describe.only('When logged in', function() {
+  describe('When logged in', function() {
     beforeEach(function() {
       cy.login({ username: 'eric', password: 'eric' })
       cy.visit('http://localhost:3000');
     })
+
 
     it('A blog can be created and is added to the list of all blogs', function() {
       cy.contains('create new blog').click()
@@ -59,6 +60,25 @@ describe('Blog app', function () {
       cy.get('#url').type('www.ashk.com')
       cy.get('#create-button').click()
       cy.get('.success').should('contain', 'a blog created by cypress').and('have.css', 'color', 'rgb(0, 128, 0)').and('have.css', 'border-style', 'solid')
+    })
+
+
+    describe('and a blog exists', function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: 'a blog created by cypress',
+          author: 'sherlock',
+          url: 'www.sholmes.com',
+          likes: 100
+        })
+      })
+
+      it('it can be liked', function () {
+        cy.contains('view').click()
+        cy.contains(100)
+        cy.contains('like').click()
+        cy.contains(101)
+      })
     })
   })
 });

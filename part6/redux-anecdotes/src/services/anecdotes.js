@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Anecdote from '../components/Anecdote';
 
 const baseUrl = 'http://localhost:3001/anecdotes';
 

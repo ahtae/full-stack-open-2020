@@ -14,6 +14,7 @@ import {
 } from 'react-router-dom';
 import Users from './components/Users';
 import User from './components/User';
+import Blog from './components/Blog';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -107,6 +108,9 @@ const App = () => {
         </p>
 
         <Switch>
+          <Route path="/blogs/:id">
+            <Blog />
+          </Route>
           <Route path="/users/:id">
             <User />
           </Route>

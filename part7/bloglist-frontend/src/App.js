@@ -89,23 +89,19 @@ const App = () => {
   return (
     <div>
       <Router>
-        <Link style={padding} to="/">
-          homes
-        </Link>
-        <Link style={padding} to="/blogs">
-          blogs
-        </Link>
-        <Link style={padding} to="/users">
-          users
-        </Link>
+        <div style={{ backgroundColor: 'lightgrey' }}>
+          <Link style={padding} to="/blogs">
+            blogs
+          </Link>
+          <Link style={padding} to="/users">
+            users
+          </Link>
+          {user.name} logged in <button onClick={handleLogout}>logout</button>
+        </div>
 
-        <h2>blogs</h2>
+        <h2>blog app</h2>
 
         <Notification />
-
-        <p>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </p>
 
         <Switch>
           <Route path="/blogs/:id">

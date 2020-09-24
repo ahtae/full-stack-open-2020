@@ -5,8 +5,15 @@ import storage from './utils/storage';
 import Blogs from './components/Blogs';
 import { logIn, logOut } from './reducers/userReducer';
 import { setNotification } from './reducers/notificationReducer';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useHistory,
+} from 'react-router-dom';
 import Users from './components/Users';
+import User from './components/User';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -17,6 +24,8 @@ const App = () => {
   const notifyWith = (message, type = 'success') => {
     dispatch(setNotification({ message, type }, 10));
   };
+
+  const history = useHistory();
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -30,6 +39,7 @@ const App = () => {
 
       setUsername('');
       setPassword('');
+      history.push('/');
       notifyWith(`${user.name} welcome back!`, 'success');
     } catch (exception) {
       notifyWith('wrong username/password', 'error');
@@ -76,10 +86,10 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <div>
+    <div>
+      <Router>
         <Link style={padding} to="/">
-          home
+          homes
         </Link>
         <Link style={padding} to="/blogs">
           blogs
@@ -87,8 +97,7 @@ const App = () => {
         <Link style={padding} to="/users">
           users
         </Link>
-      </div>
-      <div>
+
         <h2>blogs</h2>
 
         <Notification />
@@ -98,14 +107,21 @@ const App = () => {
         </p>
 
         <Switch>
-          <Route path="/blogs">{user ? <Blogs /> : null}</Route>
+          <Route path="/users/:id">
+            <User />
+          </Route>
+          <Route path="/blogs">
+            <Blogs />
+          </Route>
           <Route path="/users">
             <Users />
           </Route>
-          <Route path="/">{user ? <Blogs /> : null}</Route>
+          <Route path="/">
+            <Blogs />
+          </Route>
         </Switch>
-      </div>
-    </Router>
+      </Router>
+    </div>
   );
 };
 

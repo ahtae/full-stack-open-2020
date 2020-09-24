@@ -13,7 +13,6 @@ const User = () => {
     dispatch(initializeUsers());
   }, [dispatch]);
 
-  console.log(user);
   if (!user || !Object.keys(user).length) {
     return null;
   }

@@ -21,6 +21,7 @@ const create = (blog) => {
 
 const update = (blog) => {
   const request = axios.put(`${baseUrl}/${blog.id}`, blog, getConfig());
+  console.log(blog, `${baseUrl}/${blog.id}`)
   return request.then((response) => response.data);
 };
 

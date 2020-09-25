@@ -17,26 +17,16 @@ const Blog = () => {
   const match = useRouteMatch('/blogs/:id');
   const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null;
 
-  const handleLike = (id) => {
-    const blogToLike = blogs.find((b) => b.id === id);
+  const handleLike = () => {
     const likedBlog = {
-      ...blogToLike,
-      likes: blogToLike.likes + 1,
-      user: blogToLike.user.id,
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1,
+      id: blog.id
     };
 
     dispatch(upvoteBlog(likedBlog));
-  };
-
-  const handleRemove = async (id) => {
-    const blogToRemove = blogs.find((b) => b.id === id);
-    const ok = window.confirm(
-      `Remove blog ${blogToRemove.title} by ${blogToRemove.author}`
-    );
-    if (ok) {
-      dispatch(removeBlog(id));
-    }
-    history.push('/blogs');
   };
 
   useEffect(() => {
@@ -57,23 +47,15 @@ const Blog = () => {
       </div>
       <div>
         likes {blog.likes}
-        <button onClick={() => handleLike(blog.id)}>like</button>
+        <button onClick={handleLike}>like</button>
       </div>
       <div>added by {blog.user.name}</div>
-      {own && <button onClick={() => handleRemove(blog.id)}>remove</button>}
+      <h3>comments</h3>
+      <ul>
+      {blog.comments.map(comment => <li key={comment.id}>{comment.text}</li>)}
+      </ul>
     </div>
   );
-};
-
-Blog.propTypes = {
-  blog: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-  }).isRequired,
-  handleLike: PropTypes.func.isRequired,
-  handleRemove: PropTypes.func.isRequired,
-  own: PropTypes.bool.isRequired,
 };
 
 export default Blog;

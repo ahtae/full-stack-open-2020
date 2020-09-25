@@ -21,7 +21,6 @@ const create = (blog) => {
 
 const update = (blog) => {
   const request = axios.put(`${baseUrl}/${blog.id}`, blog, getConfig());
-  console.log(blog, `${baseUrl}/${blog.id}`)
   return request.then((response) => response.data);
 };
 
@@ -30,4 +29,9 @@ const remove = (id) => {
   return request.then((response) => response.data);
 };
 
-export default { getAll, create, update, remove };
+const createComment = (id, comment) => {
+  const request = axios.post(`${baseUrl}/${id}/comments`, comment, getConfig());
+  return request.then((response) => response.data);
+};
+
+export default { getAll, create, update, remove, createComment };

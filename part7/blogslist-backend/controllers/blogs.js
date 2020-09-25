@@ -1,32 +1,12 @@
-const router = require('express').Router({ mergeParams: true });
+const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const Blog = require('../models/blog');
 const User = require('../models/user');
 const Comment = require('../models/comment');
+const { populate } = require('../models/blog');
 
 router.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
-    .populate('user', { username: 1, name: 1 })
-    .populate({
-      path: 'comments',
-      model: 'Comment',
-      populate: {
-        path: 'comment',
-        model: 'Comment',
-      },
-    })
-    .populate({
-      path: 'comments',
-      model: 'Comment',
-      populate: {
-        path: 'user',
-        model: 'User',
-        populate: {
-          path: 'blogs',
-          model: 'Blog',
-        },
-      },
-    });
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 }).populate('comments')
 
   response.json(blogs);
 });
@@ -65,6 +45,7 @@ router.put('/:id', async (request, response) => {
 
 router.post('/', async (request, response) => {
   const blog = new Blog(request.body);
+
   const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
   if (!request.token || !decodedToken.id) {
@@ -72,6 +53,7 @@ router.post('/', async (request, response) => {
   }
 
   const user = await User.findById(decodedToken.id);
+  console.log(user);
 
   if (!blog.url || !blog.title) {
     return response.status(400).send({ error: 'title or url missing ' });
@@ -81,7 +63,7 @@ router.post('/', async (request, response) => {
     blog.likes = 0;
   }
 
-  blog.user = user;
+  blog.user = user._id;
   const savedBlog = await blog.save();
 
   user.blogs = user.blogs.concat(savedBlog._id);
@@ -91,28 +73,48 @@ router.post('/', async (request, response) => {
 });
 
 router.post('/:id/comments', async (request, response) => {
-  const { id } = request.params;
+  const blog = await Blog.findById(request.params.id);
+  // .populate('user', { username: 1, name: 1 })
+  // .populate({
+  //   path: 'comments',
+  //   model: 'Comment',
+  //   populate: {
+  //     path: 'comment',
+  //     model: 'Comment',
+  //   },
+  // })
+  // .populate({
+  //   path: 'comments',
+  //   model: 'Comment',
+  //   populate: {
+  //     path: 'user',
+  //     model: 'User',
+  //     populate: {
+  //       path: 'blogs',
+  //       model: 'Blog',
+  //     },
+  //   },
+  // });
   const comment = new Comment(request.body);
-  const blog = await Blog.findById(id);
   const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  const user = await User.findById(decodedToken.id);
 
   if (!request.token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
 
-  if (!comment.text) {
-    return response.status(400).send({ error: 'text is missing' });
-  }
+  const user = await User.findById(decodedToken.id);
 
-  comment.user = user._id;
+  comment.user = user;
+
+  if (!comment.text) {
+    return response.status(400).send({ error: 'text missing ' });
+  }
 
   const savedComment = await comment.save();
 
   blog.comments = blog.comments.concat(savedComment._id);
-  await blog.save();
-
   user.comments = user.comments.concat(savedComment._id);
+  await blog.save();
   await user.save();
 
   response.status(201).json(savedComment);

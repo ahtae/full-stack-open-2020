@@ -4,6 +4,7 @@ const INIT_BLOGS = 'INIT_BLOGS';
 const NEW_BLOG = 'NEW_BLOG';
 const UPVOTE_BLOG = 'UPVOTE_BLOG';
 const REMOVE_BLOG = 'REMOVE_BLOG';
+const CREATE_COMMENT = 'CREATE_COMMENT';
 
 const blogReducer = (state = [], action) => {
   switch (action.type) {
@@ -22,6 +23,14 @@ const blogReducer = (state = [], action) => {
       return state.map((blog) => (blog.id !== id ? blog : changedBlog));
     case REMOVE_BLOG:
       return state.filter((blog) => blog.id !== action.id);
+    case CREATE_COMMENT:
+      const blogs = state.map((blog) =>
+        blog.id === action.id
+          ? { ...blog, comments: blog.comments.concat(action.comment) }
+          : blog
+      );
+
+      return blogs;
     default:
       return state;
   }
@@ -32,7 +41,7 @@ export const initializeBlogs = () => {
     const blogs = await blogService.getAll();
 
     dispatch({
-      type: 'INIT_BLOGS',
+      type: INIT_BLOGS,
       data: blogs,
     });
   };
@@ -67,6 +76,18 @@ export const removeBlog = (id) => {
     dispatch({
       type: REMOVE_BLOG,
       id,
+    });
+  };
+};
+
+export const createComment = (id, comment) => {
+  return async (dispatch) => {
+    const createdComment = await blogService.createComment(id, comment);
+
+    dispatch({
+      type: CREATE_COMMENT,
+      id,
+      comment: createdComment
     });
   };
 };

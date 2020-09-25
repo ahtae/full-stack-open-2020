@@ -9,7 +9,7 @@ export const logIn = (user) => {
     const userObject = await loginService.login(user);
     storage.saveUser(userObject);
 
-    dispatch({
+    return dispatch({
       type: LOG_IN,
       data: userObject,
     });

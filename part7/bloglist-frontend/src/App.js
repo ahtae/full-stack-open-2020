@@ -5,16 +5,12 @@ import storage from './utils/storage';
 import Blogs from './components/Blogs';
 import { logIn, logOut } from './reducers/userReducer';
 import { setNotification } from './reducers/notificationReducer';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useHistory,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Users from './components/Users';
 import User from './components/User';
 import Blog from './components/Blog';
+import Container from '@material-ui/core/Container';
+import { AppBar, Button, Toolbar } from '@material-ui/core';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -26,22 +22,20 @@ const App = () => {
     dispatch(setNotification({ message, type }, 10));
   };
 
-  const history = useHistory();
-
   const handleLogin = (event) => {
     event.preventDefault();
     try {
-      const user = dispatch(
+      dispatch(
         logIn({
           username,
           password,
         })
       );
 
+      notifyWith(`${username} welcome back!`, 'success');
+
       setUsername('');
       setPassword('');
-      history.push('/');
-      notifyWith(`${user.name} welcome back!`, 'success');
     } catch (exception) {
       notifyWith('wrong username/password', 'error');
     }
@@ -82,24 +76,27 @@ const App = () => {
     );
   }
 
-  const padding = {
-    padding: 5,
-  };
-
   return (
-    <div>
+    <Container>
       <Router>
-        <div style={{ backgroundColor: 'lightgrey' }}>
-          <Link style={padding} to="/blogs">
-            blogs
-          </Link>
-          <Link style={padding} to="/users">
-            users
-          </Link>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </div>
+        <AppBar position="static">
+          <Toolbar>
+            <Button color="inherit" component={Link} to="/">
+              home
+            </Button>
+            <Button color="inherit" component={Link} to="/blogs">
+              blogs
+            </Button>
+            <Button color="inherit" component={Link} to="/users">
+              users
+            </Button>
+          </Toolbar>
+        </AppBar>
 
         <h2>blog app</h2>
+        <div>
+          {user.name} logged in <button onClick={handleLogout}>logout</button>
+        </div>
 
         <Notification />
 
@@ -121,7 +118,7 @@ const App = () => {
           </Route>
         </Switch>
       </Router>
-    </div>
+    </Container>
   );
 };
 

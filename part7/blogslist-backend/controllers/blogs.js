@@ -74,27 +74,6 @@ router.post('/', async (request, response) => {
 
 router.post('/:id/comments', async (request, response) => {
   const blog = await Blog.findById(request.params.id);
-  // .populate('user', { username: 1, name: 1 })
-  // .populate({
-  //   path: 'comments',
-  //   model: 'Comment',
-  //   populate: {
-  //     path: 'comment',
-  //     model: 'Comment',
-  //   },
-  // })
-  // .populate({
-  //   path: 'comments',
-  //   model: 'Comment',
-  //   populate: {
-  //     path: 'user',
-  //     model: 'User',
-  //     populate: {
-  //       path: 'blogs',
-  //       model: 'Blog',
-  //     },
-  //   },
-  // });
   const comment = new Comment(request.body);
   const decodedToken = jwt.verify(request.token, process.env.SECRET);
 

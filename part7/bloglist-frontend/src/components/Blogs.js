@@ -5,6 +5,14 @@ import { Link } from 'react-router-dom';
 import Togglable from './Togglable';
 import { setNotification } from '../reducers/notificationReducer';
 import NewBlog from './/NewBlog';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+} from '@material-ui/core';
 
 const Blogs = () => {
   const dispatch = useDispatch();
@@ -31,27 +39,24 @@ const Blogs = () => {
 
   const blogFormRef = React.createRef();
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-    borderColor: 'black',
-  };
-
   return (
     <div id="blogs">
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <NewBlog createBlog={createBlog} />
       </Togglable>
-      {blogs.sort(byLikes).map((blog) => (
-        <p key={blog.id}>
-          <Link to={`/blogs/${blog.id}`} style={blogStyle}>
-            {blog.title}
-          </Link>
-        </p>
-      ))}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            {blogs.sort(byLikes).map((blog) => (
+              <TableRow key={blog.id}>
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

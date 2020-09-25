@@ -10,7 +10,6 @@ import { useRouteMatch } from 'react-router-dom';
 const Blog = () => {
   const dispatch = useDispatch();
   const [comment, setComment] = useState('');
-  const user = useSelector((state) => state.user);
   const byLikes = (b1, b2) => b2.likes - b1.likes;
   const blogs = useSelector((state) => state.blogs.sort(byLikes));
   const match = useRouteMatch('/blogs/:id');
@@ -36,7 +35,7 @@ const Blog = () => {
     dispatch(
       createComment(blog.id, {
         ...blog,
-        text: comment
+        text: comment,
       })
     );
 
@@ -46,8 +45,6 @@ const Blog = () => {
   if (!blog) {
     return null;
   }
-
-  const own = user.username === blog.user.username;
 
   return (
     <div className="blog">

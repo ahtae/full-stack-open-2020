@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server');
+const { v1: uuid } = require('uuid');
 
 let authors = [
   {
@@ -106,6 +107,15 @@ const typeDefs = gql`
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ): Book
+  }
 `;
 
 const resolvers = {
@@ -138,9 +148,45 @@ const resolvers = {
       });
 
       return authors.map((author) => ({
-        name: author.name,
+        ...author,
         bookCount: mapOfBooks[author.name],
       }));
+    },
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      let authorAlreadyExists = false;
+      const book = { ...args, id: uuid() };
+      books = books.concat(book);
+
+      if (args.author) {
+        for (let i = 0; i < authors.length; i++) {
+          const { name } = authors[i];
+
+          if (name === args.author) {
+            authorAlreadyExists = true;
+            break;
+          }
+        }
+
+        if (authorAlreadyExists) {
+          const updatedAuthor = authors.find(
+            (author) => author.name === args.author
+          );
+          const updatedAuthors = authors.map((author) =>
+            author.name === args.author
+              ? { ...updatedAuthor, bookCount: updatedAuthor.bookCount + 1 }
+              : author
+          );
+
+          authors = updatedAuthors;
+        } else {
+          author = { ...args, name: args.author, id: uuid(), bookCount: 1 };
+          authors = authors.concat(author);
+        }
+      }
+
+      return book;
     },
   },
 };

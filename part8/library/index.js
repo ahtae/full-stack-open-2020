@@ -96,12 +96,15 @@ const typeDefs = gql`
     name: String!
     id: ID!
     born: Int
+    book: Book!
+    bookCount: Int!
   }
 
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks: [Book!]!
+    allAuthors: [Author!]!
   }
 `;
 
@@ -110,6 +113,22 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: () => books,
+    allAuthors: (root) => {
+      const mapOfBooks = {};
+
+      books.forEach((book) => {
+        if (mapOfBooks[book.author]) {
+          mapOfBooks[book.author] += 1;
+        } else {
+          mapOfBooks[book.author] = 1;
+        }
+      });
+
+      return authors.map((author) => ({
+        name: author.name,
+        bookCount: mapOfBooks[author.name],
+      }));
+    },
   },
 };
 

@@ -4,7 +4,7 @@ import Books from './components/Books';
 import NewBook from './components/NewBook';
 import Notify from './components/Notify';
 import LoginForm from './components/LoginForm';
-import { useQuery, useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 
 const App = () => {
   const [token, setToken] = useState(null);

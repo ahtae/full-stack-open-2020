@@ -1,9 +1,4 @@
-const {
-  ApolloServer,
-  UserInputError,
-  gql,
-  AuthenticationError,
-} = require('apollo-server');
+const { ApolloServer, UserInputError, gql } = require('apollo-server');
 const config = require('./utils/config');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
@@ -40,8 +35,6 @@ const typeDefs = gql`
     name: String!
     id: ID!
     born: Int
-    book: Book!
-    bookCount: Int!
   }
 
   type Query {
@@ -109,12 +102,18 @@ const resolvers = {
       }
     },
     editAuthor: (root, args) => {
-      const author = Author.findOneAndUpdate(
-        { name: args.name },
-        { born: args.setBornTo }
-      );
+      try {
+        const author = Author.findOneAndUpdate(
+          { name: args.name },
+          { born: args.setBornTo }
+        );
 
-      return author;
+        return author;
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        });
+      }
     },
   },
 };

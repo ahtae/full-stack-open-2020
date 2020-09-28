@@ -7,10 +7,10 @@ const Authors = ({ show, setError }) => {
   const [name, setName] = useState('');
   const [born, setBorn] = useState('');
   const result = useQuery(ALL_AUTHORS);
+  let authors = null;
   const [changeBirthYear] = useMutation(EDIT_BIRTH_YEAR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
   });
-  let authors = null;
 
   useEffect(() => {
     if (result.data && result.data.editNumber === null) {
@@ -56,7 +56,6 @@ const Authors = ({ show, setError }) => {
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
-              <td>{a.bookCount}</td>
             </tr>
           ))}
         </tbody>

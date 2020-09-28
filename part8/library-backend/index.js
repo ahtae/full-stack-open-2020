@@ -150,7 +150,7 @@ const resolvers = {
       }
     },
     login: async (root, args) => {
-      const user = await User({ username: args.username });
+      const user = await User.findOne({ username: args.username });
 
       if (!user || args.password !== 'secret') {
         throw new UserInputError('Wrong credentials!');
@@ -185,8 +185,9 @@ const server = new ApolloServer({
   resolvers,
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null;
+
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
-      const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
+      const decodedToken = jwt.verify(auth.substring(7), config.JWT_SECRET);
       const currentUser = await User.findById(decodedToken.id);
 
       return { currentUser };

@@ -50,7 +50,6 @@ const Authors = ({ show, setError }) => {
           <tr>
             <th></th>
             <th>born</th>
-            <th>books</th>
           </tr>
           {authors.map((a) => (
             <tr key={a.name}>

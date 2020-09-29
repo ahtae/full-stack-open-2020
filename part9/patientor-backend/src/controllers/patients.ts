@@ -1,13 +1,13 @@
-import diagnosesService from '../services/diagnosesService';
 import express from 'express';
+import patientsService from '../services/patientsService';
 
 const router = express.Router();
 
 router.get('/', (_req, res) => {
   try {
-    const diagnoses = diagnosesService.getEntries();
+    const patients = patientsService.getNonSensitiveEntries();
 
-    res.json(diagnoses);
+    res.json(patients);
   } catch (error) {
     res.json({ error: 'Something went wrong!' });
   }

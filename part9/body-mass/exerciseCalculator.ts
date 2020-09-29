@@ -1,3 +1,32 @@
+// interface calculatorValues {
+//   value1: number;
+//   value2: number;
+//   value3: number;
+//   value4: number;
+//   value5: number;
+//   value6: number;
+//   value7: number;
+//   value8: number;
+// }
+
+const parseArguments = (args: Array<string>): Array<number> => {
+  if (args.length < 4) {
+    throw new Error('Not enough arguments!');
+  }
+
+  const totalSum = args.slice(2).reduce((sum, num) => sum + num, '');
+
+  if (!isNaN(Number(totalSum))) {
+    const numbers: Array<number> = [];
+
+    args.slice(2).forEach((num) => numbers.push(Number(num)));
+
+    return numbers;
+  } else {
+    throw new Error('Provided values were not numbers!');
+  }
+};
+
 interface Result {
   periodLength: number;
   trainingDays: number;
@@ -37,4 +66,12 @@ const calculateExercises = (
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const arr = parseArguments(process.argv);
+  const dailyHours = arr.slice(1);
+  const target = arr[0];
+
+  console.log(calculateExercises(dailyHours, target));
+} catch (e) {
+  console.log('Error, something bad happened, message: ', e.message);
+}

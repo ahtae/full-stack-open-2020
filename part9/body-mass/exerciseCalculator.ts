@@ -1,14 +1,3 @@
-// interface calculatorValues {
-//   value1: number;
-//   value2: number;
-//   value3: number;
-//   value4: number;
-//   value5: number;
-//   value6: number;
-//   value7: number;
-//   value8: number;
-// }
-
 const parseArguments = (args: Array<string>): Array<number> => {
   if (args.length < 4) {
     throw new Error('Not enough arguments!');
@@ -37,7 +26,7 @@ interface Result {
   average: number;
 }
 
-const calculateExercises = (
+export const calculateExercises = (
   exerciseHours: Array<number>,
   target: number
 ): Result => {

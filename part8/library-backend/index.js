@@ -45,7 +45,7 @@ const typeDefs = gql`
 
   type User {
     username: String!
-    books: [Book!]!
+    favoriteGenre: String!
     id: ID!
   }
 
@@ -58,7 +58,7 @@ const typeDefs = gql`
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]
     allAuthors: [Author!]!
-    me: User
+    me: User!
   }
 
   type Mutation {

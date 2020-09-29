@@ -1,22 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { ALL_AUTHORS, EDIT_BIRTH_YEAR } from '../queries';
 import Select from 'react-select';
 
 const Authors = ({ show, setError }) => {
   const [name, setName] = useState('');
   const [born, setBorn] = useState('');
-  const result = useQuery(ALL_AUTHORS);
-  let authors = null;
+  const [authors, setAuthors] = useState(null);
+  const [getAuthors, resultOfAuthors] = useLazyQuery(ALL_AUTHORS);
   const [changeBirthYear] = useMutation(EDIT_BIRTH_YEAR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
   });
 
   useEffect(() => {
-    if (result.data && result.data.editNumber === null) {
+    getAuthors();
+  }, []);
+
+  useEffect(() => {
+    if (resultOfAuthors.data && resultOfAuthors.data.editNumber === null) {
       setError('author not found');
     }
-  }, [result.data, setError]);
+
+    if (resultOfAuthors.data) {
+      setAuthors(resultOfAuthors.data.allAuthors);
+    }
+  }, [resultOfAuthors, setError]);
 
   const submit = (event) => {
     event.preventDefault();
@@ -31,10 +39,8 @@ const Authors = ({ show, setError }) => {
     return null;
   }
 
-  if (result.loading) {
+  if (!authors) {
     return <div>loading...</div>;
-  } else {
-    authors = result.data.allAuthors;
   }
 
   const authorsForSelect = authors.map((author) => ({

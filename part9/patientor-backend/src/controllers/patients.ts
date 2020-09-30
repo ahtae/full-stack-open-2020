@@ -1,5 +1,6 @@
 import express from 'express';
 import patientsService from '../services/patientsService';
+import toNewPatientEntry from '../utils/utils';
 
 const router = express.Router();
 
@@ -14,16 +15,10 @@ router.get('/', (_req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { name, dateOfBirth, ssn, gender, occupation } = req.body;
-  const newPatientEntry = patientsService.addEntry({
-    name,
-    dateOfBirth,
-    ssn,
-    gender,
-    occupation,
-  });
+  const newPatientEntry = toNewPatientEntry(req.body);
+  const addedEntry = patientsService.addEntry(newPatientEntry);
 
-  res.status(201).json(newPatientEntry);
+  res.status(201).json(addedEntry);
 });
 
 export default router;

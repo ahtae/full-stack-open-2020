@@ -9,7 +9,7 @@ router.get('/', (_req, res) => {
 
     res.json(diagnoses);
   } catch (error) {
-    res.json({ error: 'Something went wrong!' });
+    res.status(404).json({ error: 'Something went wrong!' });
   }
 });
 

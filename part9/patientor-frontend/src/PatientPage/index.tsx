@@ -3,12 +3,12 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useStateValue, setPatient } from '../state';
 import { apiBaseUrl } from '../constants';
-import { Patient, Entry } from '../types';
+import { Patient, Entry, Diagnosis } from '../types';
 import { Icon } from 'semantic-ui-react';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patient }, dispatch] = useStateValue();
+  const [{ patient, diagnosisCodes }, dispatch] = useStateValue();
 
   React.useEffect(() => {
     const fetchPatientList = async () => {
@@ -43,15 +43,26 @@ const PatientPage = () => {
     <div>
       <h1>entries</h1>
       {patient.entries.map((entry: Entry) => (
-        <div>
+        <div key={entry.id}>
           <p>
             {entry.date} <em>{entry.description}</em>
           </p>
           <ul>
             {entry.diagnosisCodes
-              ? entry.diagnosisCodes.map((code: string) => (
-                  <li key={code}>{code}</li>
-                ))
+              ? entry.diagnosisCodes.map((code: string) => {
+                  const diagnosisCode:
+                    | Diagnosis
+                    | undefined = diagnosisCodes.find((c) => c.code === code);
+                  const descriptionOfDiagnosisCode = diagnosisCode
+                    ? diagnosisCode.name
+                    : null;
+
+                  return (
+                    <li key={code}>
+                      {code} {descriptionOfDiagnosisCode}
+                    </li>
+                  );
+                })
               : null}
           </ul>
         </div>

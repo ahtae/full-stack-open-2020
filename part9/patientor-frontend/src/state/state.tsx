@@ -1,15 +1,17 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { Patient } from '../types';
+import { Diagnosis, Patient } from '../types';
 import { Action } from './reducer';
 
 export type State = {
   patients: { [id: string]: Patient };
   patient: Patient | null;
+  diagnosisCodes: Diagnosis[];
 };
 
 const initialState: State = {
   patients: {},
   patient: null,
+  diagnosisCodes: []
 };
 
 export const StateContext = createContext<[State, React.Dispatch<Action>]>([

@@ -3,8 +3,8 @@ import axios from 'axios';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Button, Divider, Header, Container } from 'semantic-ui-react';
 import { apiBaseUrl } from './constants';
-import { useStateValue, setPatientList } from './state';
-import { Patient } from './types';
+import { useStateValue, setPatientList, setDiagnosisCodes } from './state';
+import { Patient, Diagnosis } from './types';
 import PatientPage from './PatientPage';
 import PatientListPage from './PatientListPage';
 
@@ -24,7 +24,21 @@ const App: React.FC = () => {
         console.error(e);
       }
     };
+
+    const fetchDiagnosisCodes = async () => {
+      try {
+        const { data: diagnosisCodesFromApi } = await axios.get<Diagnosis[]>(
+          `${apiBaseUrl}/diagnoses`
+        );
+        dispatch(setDiagnosisCodes(diagnosisCodesFromApi));
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
     fetchPatientList();
+    fetchDiagnosisCodes();
+    console.log('yup')
   }, [dispatch]);
 
   return (

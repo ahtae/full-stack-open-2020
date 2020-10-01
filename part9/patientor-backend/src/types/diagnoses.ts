@@ -48,7 +48,7 @@ export type Latin =
   | 'Fractura [ossis/ossium] pollicis'
   | 'Alia retinopathia proliferativa';
 
-export interface Diagnose {
+export interface Diagnosis {
   code: Code;
   name: Name;
   latin?: Latin;

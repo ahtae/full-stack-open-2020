@@ -1,5 +1,5 @@
 import { Patient, PublicPatient, NewPatientEntry } from '../types/patients';
-import patients from '../../data/patients.json';
+import patients from '../../data/patients';
 import uid from 'uid';
 
 const getEntries = (): Array<Patient> => {
@@ -25,7 +25,6 @@ const addEntry = (entry: NewPatientEntry): Patient => {
   const newPatientEntry = {
     id,
     ...entry,
-    entries: [],
   };
 
   patients.push(newPatientEntry);

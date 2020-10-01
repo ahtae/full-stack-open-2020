@@ -1,10 +1,5 @@
 import { NewPatientEntry } from '../types/patients';
-
-enum Gender {
-  Male = 'male',
-  Female = 'female',
-  Other = 'other'
-}
+import { Gender } from '../types/patients';
 
 const toNewPatientEntry = (object: any): NewPatientEntry => {
   return {
@@ -13,7 +8,7 @@ const toNewPatientEntry = (object: any): NewPatientEntry => {
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation),
-    entries: []
+    entries: object.entries
   };
 };
 

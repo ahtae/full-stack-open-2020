@@ -1,4 +1,4 @@
-import {Diagnosis} from '../types/diagnoses';
+import { Diagnosis } from '../types/diagnoses';
 
 interface BaseEntry {
   id: string;
@@ -9,32 +9,32 @@ interface BaseEntry {
 }
 
 export enum HealthCheckRating {
-  "Healthy" = 0,
-  "LowRisk" = 1,
-  "HighRisk" = 2,
-  "CriticalRisk" = 3
+  'Healthy' = 0,
+  'LowRisk' = 1,
+  'HighRisk' = 2,
+  'CriticalRisk' = 3,
 }
 
-interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck";
+export interface HealthCheckEntry extends BaseEntry {
+  type: 'HealthCheck';
   healthCheckRating: HealthCheckRating;
 }
 
-interface HospitalEntry extends BaseEntry {
-  type: "Hospital",
+export interface HospitalEntry extends BaseEntry {
+  type: 'Hospital';
   discharge: {
     date: string;
     criteria: string;
-  }
+  };
 }
 
-interface OccupationalHealthcareEntry extends BaseEntry {
-  type: 'OccupationalHealthcare',
-  employerName: string,
+export interface OccupationalHealthcareEntry extends BaseEntry {
+  type: 'OccupationalHealthcare';
+  employerName: string;
   sickLeave?: {
-    startDate: string,
-    endDate: string
-  }
+    startDate: string;
+    endDate: string;
+  };
 }
 
 export type Entry =
@@ -61,3 +61,5 @@ export interface Patient {
 export type PublicPatient = Omit<Patient, 'ssn' | 'entries'>;
 
 export type NewPatientEntry = Omit<Patient, 'id'>;
+
+export type NewEntry = Omit<Entry, 'id'>;

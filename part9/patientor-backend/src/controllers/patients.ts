@@ -51,14 +51,16 @@ router.post('/:id/entries', (req, res) => {
       newEntry = toNewHospitalEntry(req.body);
     } else if (req.body.type === 'HealthCheck') {
       newEntry = toNewHealthCheckEntry(req.body);
-    } else if (req.body.type === 'OccupationalHealthcareEntry') {
+    } else if (req.body.type === 'OccupationalHealthcare') {
       newEntry = toNewOccupationalHealthcareEntry(req.body);
     }
 
     const createdEntry = patientsService.addPatientEntry(id, newEntry as Entry);
 
+    console.log(createdEntry)
     res.json(createdEntry);
   } catch (error) {
+    console.log(error)
     res.status(404).json({ error: 'Something went wrong!' });
   }
 });

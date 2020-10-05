@@ -38,7 +38,7 @@ const App: React.FC = () => {
 
     fetchPatientList();
     fetchDiagnosisCodes();
-    console.log('yup')
+    console.log('yup');
   }, [dispatch]);
 
   return (

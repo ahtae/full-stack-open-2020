@@ -19,7 +19,7 @@ export type Action =
       payload: Diagnosis[];
     }
   | {
-      type: 'ADD_HOSPITAL_ENTRY';
+      type: 'ADD_ENTRY';
       payload: Entry;
       id: string;
     };
@@ -45,9 +45,9 @@ export const addPatient = (patient: Patient): Action => {
   };
 };
 
-export const addHospitalEntry = (entry: Entry, id: string): Action => {
+export const addEntry = (entry: Entry, id: string): Action => {
   return {
-    type: 'ADD_HOSPITAL_ENTRY',
+    type: 'ADD_ENTRY',
     payload: entry,
     id,
   };
@@ -91,7 +91,7 @@ export const reducer = (state: State, action: Action): State => {
         ...state,
         diagnosisCodes: action.payload,
       };
-    case 'ADD_HOSPITAL_ENTRY':
+    case 'ADD_ENTRY':
       const updatedState = { ...state };
 
       if (updatedState.patient && updatedState.patient.id === action.id) {

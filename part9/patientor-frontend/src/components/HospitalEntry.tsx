@@ -1,20 +1,20 @@
 import React from 'react';
 import { useStateValue } from '../state';
 import { Entry, Diagnosis } from '../types';
-import { Table, Icon, Container } from 'semantic-ui-react';
+import { Table, Icon } from 'semantic-ui-react';
 
 const HospitalEntry: React.FC<{ entry: Entry }> = ({ entry }) => {
   const [{ diagnosisCodes }] = useStateValue();
 
   return (
     <Table.Row>
-      <Table.Cell style={{ fontSize: 20 }}>
-        {entry.date} <Icon name="hospital" />
-      </Table.Cell>
-      <Table.Cell style={{ color: 'gray' }}>
-        <em>{entry.description}</em>
-      </Table.Cell>
       <Table.Cell>
+        <p style={{ fontSize: 20 }}>
+          {entry.date} <Icon name="hospital" />
+        </p>
+        <p style={{ color: 'gray' }}>
+          <em>{entry.description}</em>
+        </p>
         {
           <ul>
             {entry.diagnosisCodes

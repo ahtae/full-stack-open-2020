@@ -46,7 +46,7 @@ const parseHealthCheckRating = (param: any): HealthCheckRating => {
 };
 
 const isNumber = (num: any): boolean => {
-  return typeof num === 'number';
+  return !isNaN(num);
 };
 
 const parseEmployerName = (employerName: any): string => {

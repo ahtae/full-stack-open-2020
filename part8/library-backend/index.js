@@ -129,9 +129,10 @@ const resolvers = {
           author: savedAuthor._id,
         });
 
+        book.save();
         pubsub.publish('BOOK_ADDED', { bookAdded: book });
 
-        return book.save();
+        return book;
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,

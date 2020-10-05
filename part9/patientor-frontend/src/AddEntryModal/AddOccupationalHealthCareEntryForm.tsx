@@ -52,6 +52,18 @@ const AddOccupationalHealthCareEntry: React.FC<Props> = ({
           errors.specialist = requiredError;
         }
 
+        if (!values.employerName) {
+          errors.employerName = requiredError;
+        }
+
+        if (!values.sickLeave?.startDate) {
+          errors.sickLeave = requiredError;
+        }
+
+        if (!values.sickLeave?.endDate) {
+          errors.sickLeave = requiredError;
+        }
+
         return errors;
       }}
     >

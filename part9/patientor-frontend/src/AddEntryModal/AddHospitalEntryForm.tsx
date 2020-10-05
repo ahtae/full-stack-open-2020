@@ -2,9 +2,7 @@ import React from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import { Field, Formik, Form } from 'formik';
 import { DiagnosisSelection } from '../AddPatientModal/FormField';
-import {
-  TextField,
-} from '../AddPatientModal/FormField';
+import { TextField } from '../AddPatientModal/FormField';
 import { HospitalEntry } from '../types';
 import { useStateValue } from '../state';
 
@@ -35,21 +33,24 @@ const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         const requiredError = 'Field is required';
         const errors: { [field: string]: string } = {};
 
-        if (!values.description) {
-          errors.description = requiredError;
-        }
-
         if (!values.date) {
           errors.date = requiredError;
+        }
+
+        if (!values.description) {
+          errors.description = requiredError;
         }
 
         if (!values.specialist) {
           errors.specialist = requiredError;
         }
 
-        if (!values.discharge) {
+        if (!values.discharge.date) {
           errors.discharge = requiredError;
+        }
 
+        if (!values.discharge.criteria) {
+          errors.discharge = requiredError;
         }
 
         return errors;

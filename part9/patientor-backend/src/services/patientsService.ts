@@ -41,7 +41,7 @@ const addEntry = (entry: NewPatientEntry): Patient => {
 const addPatientEntry = (
   idOfPatient: string,
   entry: NewEntry
-): Patient | undefined => {
+): NewEntry | undefined => {
   const id = `${uid(8)}-${uid(4)}-${uid(4)}-${uid(12)}`;
 
   const newEntry = {
@@ -59,7 +59,7 @@ const addPatientEntry = (
     }
   }
 
-  return patients.find((p) => p.id === idOfPatient);
+  return newEntry;
 };
 
 export default {

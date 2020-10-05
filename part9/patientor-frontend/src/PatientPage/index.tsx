@@ -1,15 +1,41 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useStateValue, setPatient } from '../state';
+import { useStateValue, setPatient, addHospitalEntry } from '../state';
 import { apiBaseUrl } from '../constants';
-import { Patient, Entry, Diagnosis } from '../types';
-import { Icon } from 'semantic-ui-react';
+import { Patient, Entry } from '../types';
+import { Icon, Button, Table, Container } from 'semantic-ui-react';
 import EntryDetails from '../components/EntryDetails';
+import AddEntryModal from '../AddEntryModal/index';
+import { HospitalEntryFormValues } from '../AddEntryModal/AddHospitalEntryForm';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patient, diagnosisCodes }, dispatch] = useStateValue();
+  const [{ patient }, dispatch] = useStateValue();
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitNewHospitalEntry = async (values: HospitalEntryFormValues) => {
+    try {
+      const { data: newHospitalEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+        values
+      );
+
+      dispatch(addHospitalEntry(newHospitalEntry, id));
+      closeModal();
+    } catch (e) {
+      console.error(e.response.data);
+      setError(e.response.data.error);
+    }
+  };
 
   React.useEffect(() => {
     const fetchPatientList = async () => {
@@ -41,13 +67,15 @@ const PatientPage = () => {
       : 'venus mars';
 
   const entriesOutput = patient.entries.length ? (
-    <div>
-      <br />
-      <h3>entries</h3>
-      {patient.entries.map((entry: Entry) => (
-        <EntryDetails entry={entry} />
-      ))}
-    </div>
+    <Container textAlign="center">
+      <Table celled>
+        <Table.Body>
+          {Object.values(patient.entries).map((entry) => (
+            <EntryDetails key={entry.id} entry={entry} />
+          ))}
+        </Table.Body>
+      </Table>
+    </Container>
   ) : null;
 
   return (
@@ -57,7 +85,16 @@ const PatientPage = () => {
       </h1>
       <div>ssn: {patient.ssn}</div>
       <div>occupation: {patient.occupation}</div>
+      <h3>entries</h3>
       {entriesOutput}
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewHospitalEntry}
+        error={error}
+        onClose={closeModal}
+      />
+      <br />
+      <Button onClick={() => openModal()}>Add New Hospital Entry</Button>
     </div>
   );
 };

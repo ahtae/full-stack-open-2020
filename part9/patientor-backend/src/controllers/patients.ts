@@ -55,9 +55,9 @@ router.post('/:id/entries', (req, res) => {
       newEntry = toNewOccupationalHealthcareEntry(req.body);
     }
 
-    const patient = patientsService.addPatientEntry(id, newEntry as Entry);
+    const createdEntry = patientsService.addPatientEntry(id, newEntry as Entry);
 
-    res.json(patient);
+    res.json(createdEntry);
   } catch (error) {
     res.status(404).json({ error: 'Something went wrong!' });
   }

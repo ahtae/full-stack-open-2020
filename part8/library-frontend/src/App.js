@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
@@ -38,7 +38,9 @@ const App = () => {
         {token ? (
           <button onClick={() => setPage('add')}>add book</button>
         ) : null}
-        {token ? <button onClick={() => setPage('recommended')}>recommended</button> : null}
+        {token ? (
+          <button onClick={() => setPage('recommended')}>recommended</button>
+        ) : null}
 
         {!token ? (
           <button onClick={() => setPage('login')}>login</button>

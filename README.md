@@ -12,7 +12,7 @@ Exercises from University of Helsinki's [Full Stack Open 2020](https://fullstack
 | Part 5: Testing React apps                                           |      ✓        |
 | Part 6: State management with Redux                                  |      ✓        |
 | Part 7: React router, custom hooks, styling app with CSS and webpack |      ✓        |
-| Part 8: GraphQL                                                      |               |
+| Part 8: GraphQL                                                      |      ✓        |
 | Part 9: Typescript                                                   |      ✓        |
 | Part 10: React Native                                                |               |
 
